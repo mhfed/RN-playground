@@ -5,6 +5,7 @@
  * @format
  */
 
+import {NavigationProp} from '@react-navigation/native';
 import React from 'react';
 import type {PropsWithChildren} from 'react';
 import {
@@ -13,6 +14,7 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  TouchableOpacity,
   useColorScheme,
   View,
 } from 'react-native';
@@ -31,7 +33,6 @@ type SectionProps = PropsWithChildren<{
 
 function Section({children, title}: SectionProps): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
-  console.log(isDarkMode);
   return (
     <View style={styles.sectionContainer}>
       <Text
@@ -56,7 +57,10 @@ function Section({children, title}: SectionProps): JSX.Element {
   );
 }
 
-function App(): JSX.Element {
+type WelcomeProps = {
+  navigation: NavigationProp<any>;
+};
+export const Welcome = ({navigation}: WelcomeProps) => {
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
@@ -77,6 +81,23 @@ function App(): JSX.Element {
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
+          {/* add button back to previous screen and style it look like circle */}
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={{
+              width: 100,
+              height: 100,
+              borderRadius: 50,
+              backgroundColor: 'red',
+              justifyContent: 'center',
+              alignItems: 'center',
+              position: 'absolute',
+              top: -50,
+              left: 20,
+            }}>
+            <Text>Back</Text>
+          </TouchableOpacity>
+
           <Section title="Step One">
             Edit <Text style={styles.highlight}>App.tsx</Text> to change this
             screen and then come back to see your edits.
@@ -95,7 +116,7 @@ function App(): JSX.Element {
       </ScrollView>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   sectionContainer: {
@@ -115,5 +136,3 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
-
-export default App;
