@@ -1,95 +1,188 @@
 import React from 'react';
 
-import {NavigationContainer, useNavigation} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {Button, Text} from 'react-native';
-import {Playground} from './app/screens/playground';
-import {Welcome} from './app/screens/welcome';
-import {HomeScreen} from './app/screens/home';
-import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {
+  DrawerContentScrollView,
+  DrawerItem,
+  createDrawerNavigator,
+} from '@react-navigation/drawer';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {Text, TouchableHighlight, View} from 'react-native';
 
 export type RootStackParamList = {
-  Playground: {username: string; age: string};
-  Welcome: undefined;
-  Home: undefined;
+  DrawerStack: undefined;
+  BottomStack: undefined;
+  Screen1: undefined;
+  Screen2: undefined;
+  Screen3: undefined;
+  Search: undefined;
+  Top: undefined;
 };
+
 const Drawer = createDrawerNavigator();
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const RootStack = createNativeStackNavigator<RootStackParamList>();
 
 const BottomTab = createBottomTabNavigator();
 
-function LogoTitle() {
-  return <Text> This is Title </Text>;
+function Screen1({navigation}: any) {
+  return (
+    <View>
+      <Text>Screen 1</Text>
+      <TouchableHighlight
+        style={{
+          backgroundColor: 'red',
+          width: 100,
+          height: 30,
+          borderRadius: 5,
+        }}
+        onPress={() => {
+          navigation.navigate('Search');
+        }}>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <Text>Search</Text>
+        </View>
+      </TouchableHighlight>
+
+      <TouchableHighlight onPress={() => navigation.navigate('TopStack')}>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <Text
+            style={{
+              padding: 10,
+              backgroundColor: 'lightblue',
+              borderRadius: 5,
+            }}>
+            Go to top stack
+          </Text>
+        </View>
+      </TouchableHighlight>
+    </View>
+  );
 }
 
-const StackScreen = () => {
-  const navigation = useNavigation();
+function Screen2() {
   return (
-    <Stack.Navigator
-      initialRouteName="Home"
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: '#f4511e',
-        },
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        },
-      }}>
-      <Stack.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          headerTitle: props => {
-            console.log({props});
-            return <LogoTitle {...props} />;
-          },
-          headerRight: () => (
-            <Button
-              onPress={() => navigation.openDrawer()}
-              title="Info"
-              color="#fff"
-            />
-          ),
-        }}
-      />
-
-      <Stack.Screen
-        name="Welcome"
-        component={Welcome}
-        options={{headerTitle: LogoTitle}}
-      />
-
-      {/*use React.memo for components if render with callback*/}
-      <Stack.Screen name="Playground" initialParams={{username: 'hieu.minh'}}>
-        {props => {
-          // console.log('props', props);
-          return <Playground {...props} extraData={'Data'} />;
-        }}
-      </Stack.Screen>
-    </Stack.Navigator>
+    <View>
+      <Text>Screen 2</Text>
+    </View>
   );
-};
+}
 
-const BottomScreen = () => {
+function Screen3() {
   return (
-    <BottomTab.Navigator>
-      <BottomTab.Screen name="Feed" component={StackScreen} />
-      <BottomTab.Screen name="Welcome" component={Welcome} />
-      <BottomTab.Screen name="Playground" component={Playground} />
+    <View>
+      <Text>Screen 3</Text>
+    </View>
+  );
+}
+function Screen4() {
+  return (
+    <View>
+      <Text>Screen 4</Text>
+    </View>
+  );
+}
+function Screen5() {
+  return (
+    <View>
+      <Text>Screen 5</Text>
+    </View>
+  );
+}
+
+function SearchScreen() {
+  return (
+    <View>
+      <Text>Search Screen</Text>
+    </View>
+  );
+}
+
+function Top() {
+  return (
+    <View>
+      <Text>Top</Text>
+    </View>
+  );
+}
+
+const BottomStack = ({state}: any) => {
+  return (
+    <BottomTab.Navigator screenOptions={{headerShown: false}}>
+      <BottomTab.Screen name="Screen1" component={Screen1} />
+      <BottomTab.Screen name="Screen2" component={Screen2} />
+      <BottomTab.Screen name="Screen3" component={Screen3} />
+      <BottomTab.Screen name="Screen4" component={Screen4} />
+      <BottomTab.Screen name="Screen5" component={Screen5} />
     </BottomTab.Navigator>
   );
 };
-export const App = () => {
+
+const TopStack = () => {
   return (
-    <NavigationContainer>
-      <Drawer.Navigator>
-        <Drawer.Screen name="Feed" component={BottomScreen} />
-        <Drawer.Screen name="Welcome" component={Welcome} />
-        <Drawer.Screen name="Playground" component={Playground} />
-      </Drawer.Navigator>
-    </NavigationContainer>
+    <RootStack.Navigator screenOptions={{headerShown: false}}>
+      <RootStack.Screen name="Top" component={Top} />
+    </RootStack.Navigator>
   );
 };
+
+const renderDrawer = ({navigation}: any) => {
+  // console.log('routeNames', routeNames);
+  // console.log('active', active);
+
+  return (
+    <DrawerContentScrollView>
+      <DrawerItem
+        label="Screen1"
+        onPress={() => navigation.navigate('Screen1')}
+      />
+      <DrawerItem
+        label="Screen2"
+        onPress={() => navigation.navigate('Screen2')}
+      />
+      <DrawerItem
+        label="Screen3"
+        onPress={() => navigation.navigate('Screen3')}
+      />
+      <DrawerItem
+        label="Screen4"
+        onPress={() => navigation.navigate('Screen4')}
+      />
+      <DrawerItem
+        label="Screen5"
+        onPress={() => navigation.navigate('Screen5')}
+      />
+    </DrawerContentScrollView>
+  );
+};
+const DrawerStack = () => {
+  return (
+    <Drawer.Navigator
+      initialRouteName="BottomStack"
+      drawerContent={renderDrawer}>
+      <Drawer.Screen name="BottomStack" component={BottomStack} />
+
+      <Drawer.Screen name="TopStack" component={TopStack} />
+    </Drawer.Navigator>
+  );
+};
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <RootStack.Navigator
+        initialRouteName="DrawerStack"
+        screenOptions={{headerShown: false}}>
+        <RootStack.Group
+          screenOptions={{headerStyle: {backgroundColor: 'papayawhip'}}}>
+          <RootStack.Screen name="DrawerStack" component={DrawerStack} />
+        </RootStack.Group>
+
+        <RootStack.Group screenOptions={{presentation: 'modal'}}>
+          <RootStack.Screen name="Search" component={SearchScreen} />
+        </RootStack.Group>
+      </RootStack.Navigator>
+    </NavigationContainer>
+  );
+}
